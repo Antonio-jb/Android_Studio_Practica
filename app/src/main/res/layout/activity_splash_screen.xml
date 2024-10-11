@@ -15,6 +15,11 @@
         android:alpha="0.4"
         />
 
+    <ImageView
+        android:id="@+id/splashGlideBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+    />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/SplashGlH1"
         android:layout_width="wrap_content"
@@ -43,6 +48,7 @@
         app:layout_constraintTop_toBottomOf="@+id/splashLogo"
         android:textSize="40sp"
         android:fontFamily="@font/triforce"
+        android:textColor="@color/cardview_light_background"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
