@@ -1,4 +1,4 @@
-    package com.antoniojb.first;
+package com.antoniojb.first;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -33,6 +34,7 @@ import com.google.android.material.textfield.TextInputLayout;
         TextInputLayout registerPasswordTIL = findViewById(R.id.registerPasswordTIL);
         TextInputLayout registerPasswordConfirmTIL = findViewById(R.id.registerPasswordConfirmTIL);
         Button registerButton = findViewById(R.id.registerButton);
+        TextView loginLoginText = findViewById(R.id.loginLoginText);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +66,13 @@ import com.google.android.material.textfield.TextInputLayout;
 
                 Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_SHORT).show();
                 launchLogin();
+
+                loginLoginText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        launchLogin();
+                    }
+                });
             }
         });
 

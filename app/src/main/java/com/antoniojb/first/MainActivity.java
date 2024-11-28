@@ -7,8 +7,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,98 +30,95 @@ public class MainActivity extends AppCompatActivity {
         TextView welcomeText = findViewById(R.id.welcomeText);
         TextView addedText = findViewById(R.id.addedText);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("Usuario", MODE_PRIVATE);
-        String nombre = sharedPreferences.getString("username", "anonimo");
-        String password = sharedPreferences.getString("password", "contraseña");
+        SharedPreferences preferences = getSharedPreferences("Usuario", MODE_PRIVATE);
+        String nombre = preferences.getString("username", "anonimo");
+        String password = preferences.getString("password", "contraseña");
 
-        welcomeText.setText("Bienvenido, " + nombre);
-        addedText.setText("Tu contraseña es: " + password);
+        welcomeText.setText("Bienvenido, " + nombre + ".");
+        addedText.setText("Tu contraseña es: " + password + ".");
 
         Button callDialogButton = findViewById(R.id.callDialogButton);
-                callDialogButton.setOnClickListener(new View.OnClickListener() {
+        callDialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+              //AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+              //dialogBuilder.setMessage("Hola" + nombre);
+              //dialogBuilder.setCancelable(true);
+              //dialogBuilder.setPositiveButton("Si, soy yo.", new DialogInterface.OnClickListener() {
+              //    @Override
+              //    public void onClick(DialogInterface dialogInterface, int i) {
+              //        Toast.makeText(MainActivity.this, "Bienvenido.", Toast.LENGTH_SHORT).show();
+              //        dialogInterface.cancel();
+              //    }
+              //});
+
+                MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(MainActivity.this)
+                        .setIcon(R.drawable.logo)
+                        .setTitle("Bienvenido")
+                        .setMessage("Hola, te llamas " + nombre.toUpperCase() + "?")
+                        .setPositiveButton("Si, soy yo.", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
-                        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                        dialogBuilder.setMessage("Hola" + nombre);
-                        dialogBuilder.setCancelable(true);
-                        dialogBuilder.setPositiveButton("Si, soy yo.", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Toast.makeText(MainActivity.this, "Bienvenido.", Toast.LENGTH_SHORT).show();
-                                dialogInterface.cancel();
-                            }
-                        });
-                        dialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                MaterialAlertDialogBuilder dialogBuilder2 = new MaterialAlertDialogBuilder(MainActivity.this)
-                                        .setIcon(R.drawable.logo)
-                                        .setTitle("Confirmación")
-                                        .setMessage("¿Quieres cambiar tu nombre?")
-                                        .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
-
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                //Ir al layout de cambio de nombre de usuario
-                                                Toast.makeText(MainActivity.this, "Cambiando nombre...", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                dialogBuilder2.setNegativeButton("No", new DialogInterface.OnClickListener() {
-
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(MainActivity.this, "Bienvenido " + nombre.toUpperCase() + ".", Toast.LENGTH_SHORT).show();
+                        dialogInterface.cancel();
+                    }
+                });
+                dialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        MaterialAlertDialogBuilder dialogBuilder2 = new MaterialAlertDialogBuilder(MainActivity.this)
+                                .setIcon(R.drawable.logo)
+                                .setTitle("Confirmación")
+                                .setMessage("¿Quieres cambiar tu nombre?")
+                                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        //Cerrar la aplicación
-                                        Toast.makeText(MainActivity.this, "No se cambió el nombre.", Toast.LENGTH_SHORT).show();
-                                        AlertDialog alertDialog2 = dialogBuilder2.create();
-                                        alertDialog2.show();
+                                        Snackbar.make(view, "Deseas cambiar tu nombre?", Snackbar.LENGTH_SHORT)
+                                                .setAction("Cambiar", new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+                                                        final View inflator = layoutInflater.inflate(R.layout.custom_alert_dialog, null);
+                                                        MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(MainActivity.this)
+                                                                .setIcon(R.drawable.logo)
+                                                                .setTitle("Cambiar nombre")
+                                                                .setView(inflator)
+                                                                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                                        EditText nuevoNombre = inflator.findViewById(R.id.nombreNuevo);
+                                                                        String nombreCambiado = nuevoNombre.getText().toString();
+
+                                                                        SharedPreferences preferences = getSharedPreferences("Usuario", Context.MODE_PRIVATE);
+                                                                        SharedPreferences.Editor editor = preferences.edit();
+                                                                        editor.putString("nombre", nombreCambiado);
+                                                                        editor.apply(); // Hay que Asegurarse de aplicar los cambios.
+                                                                        welcomeText.setText("Bienvenido, tu nombre ahora es " + nombreCambiado + ".");
+                                                                    }
+                                                                });
+                                                        materialAlertDialogBuilder.show();
+                                                    }
+                                                })
+                                                .show();
+                                    }
+                                });
+
+                                dialogBuilder2.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Toast.makeText(MainActivity.this, "No se ha cambiado el nombre.", Toast.LENGTH_SHORT).show();
                                         dialogInterface.cancel();
                                     }
                                 })
-                                        .show();
-                            }
-                        });
-                        AlertDialog alertDialog = dialogBuilder.create();
-                        alertDialog.show();
-
-                        welcomeText.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(MainActivity.this)
-                                        .setIcon(R.drawable.logo)
-                                        .setTitle("Hola " + nombre)
-                                        .setMessage("Bienvendios a nuevo estilo de Alert Dialog")
-                                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                Snackbar.make(view, "Si ese no es tu nombre puedes cambiarlo", Snackbar.LENGTH_SHORT)
-                                                        .setAction("Cambiar", new View.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(View view) {
-                                                                Toast.makeText(MainActivity.this, "Clickado", Toast.LENGTH_SHORT).show();
-                                                            }
-                                                        })
-                                                        .show();
-                                            }
-                                        })
-                                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                Toast.makeText(MainActivity.this, "Has cancelado", Toast.LENGTH_SHORT).show();
-                                            }
-                                        })
-                                        .setView(R.layout.custom_alert_dialog);
-                                materialAlertDialogBuilder.show();
-                            }
-                        });
-                        welcomeText.setOnClickListener(new View.OnClickListener() {
-
-                            @Override
-                            public void onClick(View view) {
-
-                            }
-                        });
-
+                                .show();
                     }
                 });
+
+                AlertDialog alertDialog = dialogBuilder.create();
+                alertDialog.show();
+
+            }
+        });
     }
 }

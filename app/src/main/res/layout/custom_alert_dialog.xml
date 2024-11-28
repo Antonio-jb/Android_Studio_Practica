@@ -11,11 +11,12 @@
         >
 
         <EditText
+            android:id="@+id/nombreNuevo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Introduce tu nombre"
+            android:hint="Introduce tu nombre nuevo"
             android:inputType="textPersonName"
-            ></EditText>
+            />
 
     </com.google.android.material.textfield.TextInputLayout>
 

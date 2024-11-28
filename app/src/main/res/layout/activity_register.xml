@@ -130,14 +130,14 @@
         android:layout_marginTop="20dp"
         android:text="Crear"
         app:icon="@drawable/baseline_login_24"
-        app:layout_constraintBottom_toTopOf="@+id/loginRegisterText"
+        app:layout_constraintBottom_toTopOf="@+id/loginLoginText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/registerPasswordConfirmTIL"
         app:layout_constraintHorizontal_bias="0.5" />
 
     <TextView
-        android:id="@+id/loginRegisterText"
+        android:id="@+id/loginLoginText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -146,5 +146,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/registerButton"
-        app:layout_constraintHorizontal_bias="0.5" />
+        app:layout_constraintHorizontal_bias="0.5"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
